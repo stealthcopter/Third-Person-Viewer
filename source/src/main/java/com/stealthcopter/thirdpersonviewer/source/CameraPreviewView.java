@@ -5,11 +5,12 @@ import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.io.ByteArrayOutputStream;
+
+import timber.log.Timber;
 
 /**
  * Created by Alvin on 2016-05-20.
@@ -17,8 +18,6 @@ import java.io.ByteArrayOutputStream;
 public class CameraPreviewView extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback {
     private SurfaceHolder mHolder;
     private Camera mCamera;
-    private int width;
-    private int height;
     public ByteArrayOutputStream mFrameBuffer;
 
     /**
@@ -62,6 +61,11 @@ public class CameraPreviewView extends SurfaceView implements SurfaceHolder.Call
         }
     }
 
+    int width = 1280;
+    int height = 720;
+//
+//    int width = 960;
+//    int height = 540;
 
     /**
      * surface changed function
@@ -81,11 +85,10 @@ public class CameraPreviewView extends SurfaceView implements SurfaceHolder.Call
 
             //Configration Camera Parameter(full-size)
             Camera.Parameters parameters = mCamera.getParameters();
-//            parameters.setPreviewSize(1280, 720);
-//            parameters.setPreviewSize(960, 540);
-            parameters.setPreviewSize(640, 360);
-            this.width = parameters.getPreviewSize().width;
-            this.height = parameters.getPreviewSize().height;
+
+            parameters.setPreviewSize(width, height);
+            //this.width = parameters.getPreviewSize().width;
+            //this.height = parameters.getPreviewSize().height;
             parameters.setPreviewFormat(ImageFormat.NV21);
             mCamera.setParameters(parameters);
             // mCamera.setDisplayOrientation(90);
@@ -103,17 +106,28 @@ public class CameraPreviewView extends SurfaceView implements SurfaceHolder.Call
      * @param data
      * @param camera
      */
+    YuvImage yuvimage;
+    ByteArrayOutputStream baos;
     public void onPreviewFrame(byte[] data, Camera camera) {
         try {
-            //convert YuvImage(NV21) to JPEG Image data
-            YuvImage yuvimage = new YuvImage(data, ImageFormat.NV21, this.width, this.height, null);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            yuvimage.compressToJpeg(new Rect(0, 0, this.width, this.height), 95, baos);
-            mFrameBuffer = baos;
+
+            oldWorkingMethod(data);
+
+            if (baos != null){
+                mFrameBuffer = baos;
+            }
 
         } catch (Exception e) {
-            Log.d("parse", "errpr");
+            Timber.e(e, "error");
         }
+    }
+
+    public void oldWorkingMethod(byte[] data){
+
+        yuvimage = new YuvImage(data, ImageFormat.NV21, width, height, null);
+        baos = new ByteArrayOutputStream();
+        yuvimage.compressToJpeg(new Rect(0, 0, width, height), 40, baos);
+
     }
 
 }
