@@ -12,17 +12,18 @@ import android.widget.ImageView;
 import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
+    public static int frameNumber = -1;
     private ImageView mCameraView;
     private ImageView mCameraView2;
 
     public static String SERVERIP = "192.168.43.203";
     public static final int SERVERPORT = 9191;
-    public MyClientThread mClient;
-    public Bitmap mLastFrame;
+    public VideoClientThread mClient;
+    public static Bitmap mLastFrame;
 
-    private final Handler handler = new MyHandler(this);
+    private final Handler handler = new Handler();
 
-    private Runnable mStatusChecker = new Runnable() {
+    private Runnable updateImageRunnable = new Runnable() {
         @Override
         public void run() {
             try {
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             } finally {
                 // 100% guarantee that this always happens, even if
                 // your update method throws an exception
-                handler.postDelayed(mStatusChecker, 1000 / 30);
+                handler.postDelayed(updateImageRunnable, 1000 / 30);
             }
         }
     };
@@ -53,15 +54,47 @@ public class MainActivity extends AppCompatActivity {
         mCameraView = (ImageView) findViewById(R.id.camera_preview);
         mCameraView2 = (ImageView) findViewById(R.id.camera_preview2);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        hideDecorView();
+
+        handler.post(updateImageRunnable);
+
+        startSocket();
+    }
+
+    private void hideDecorView(){
+        View decorView = getWindow().getDecorView();
+        // Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
+        // Remember that you should never show the action bar if the
+        // status bar is hidden, so hide that too if necessary.
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+    }
+
+    private void startSocket() {
         new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... unused) {
                 // Background Code
-                Socket s;
+                Socket s = null;
                 try {
                     s = new Socket(SERVERIP, SERVERPORT);
-                    mClient = new MyClientThread(s, handler);
+                    mClient = new VideoClientThread(s);
                     new Thread(mClient).start();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -70,24 +103,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }.execute();
-        mStatusChecker.run();
+    }
+
+    private void stopSocket(){
+        if (mClient!=null) mClient.stop();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        View decorView = getWindow().getDecorView();
-        // Hide the status bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
-        // Remember that you should never show the action bar if the
-        // status bar is hidden, so hide that too if necessary.
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
+    public void onPause() {
+        super.onPause();
+        handler.removeCallbacks(updateImageRunnable);
+        stopSocket();
     }
 
 }

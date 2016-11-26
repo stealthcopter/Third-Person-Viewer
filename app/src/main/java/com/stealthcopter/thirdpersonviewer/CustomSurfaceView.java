@@ -56,18 +56,18 @@ public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     private void doDraw(Canvas canvas) {
 
-//        if (MainActivity.mLastFrame != null) {
-//
-//            source.set(0, 0, MainActivity.mLastFrame.getWidth(), MainActivity.mLastFrame.getHeight());
-//            dst1.set(0, 0, width / 2, height);
-//            dst2.set(width / 2, 0, width, height);
-//
-//            canvas.drawBitmap(MainActivity.mLastFrame, source, dst1, null);
-//            canvas.drawBitmap(MainActivity.mLastFrame, source, dst2, null);
-//        }
-//        else{
-//            Timber.e("Frames is null");
-//        }
+        if (MainActivity.mLastFrame != null) {
+
+            source.set(0, 0, MainActivity.mLastFrame.getWidth(), MainActivity.mLastFrame.getHeight());
+            dst1.set(0, 0, width / 2, height);
+            dst2.set(width / 2, 0, width, height);
+
+            canvas.drawBitmap(MainActivity.mLastFrame, source, dst1, null);
+            canvas.drawBitmap(MainActivity.mLastFrame, source, dst2, null);
+        }
+        else{
+            Timber.e("Frames is null");
+        }
 
     }
 
@@ -145,16 +145,18 @@ public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
                 synchronized (surfaceHolder) {
 
-//                    if (MainActivity.frameNumber != lastFrameNo) {
-//
-//                        canvas = surfaceHolder.lockCanvas();
-//
-//                        if (canvas != null) {
-//                            customSurfaceView.doDraw(canvas);
-//
-//                            surfaceHolder.unlockCanvasAndPost(canvas);
-//                        }
-//                    }
+                    if (MainActivity.frameNumber != lastFrameNo) {
+
+                        lastFrameNo = MainActivity.frameNumber;
+
+                        canvas = surfaceHolder.lockCanvas();
+
+                        if (canvas != null) {
+                            customSurfaceView.doDraw(canvas);
+
+                            surfaceHolder.unlockCanvasAndPost(canvas);
+                        }
+                    }
                 }
 
             }
