@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$USER_HOME$/workspace/ThirdPersonViewer/ThirdPersonViewer.iml" filepath="$USER_HOME$/workspace/ThirdPersonViewer/ThirdPersonViewer.iml" />
+      <module fileurl="file://$USER_HOME$/workspace/ThirdPersonViewer/app/app.iml" filepath="$USER_HOME$/workspace/ThirdPersonViewer/app/app.iml" />
+      <module fileurl="file://$USER_HOME$/workspace/ThirdPersonViewer/source/source.iml" filepath="$USER_HOME$/workspace/ThirdPersonViewer/source/source.iml" />
+    </modules>
+  </component>
+</project>
