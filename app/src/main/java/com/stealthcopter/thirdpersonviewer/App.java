@@ -14,7 +14,6 @@ import timber.log.Timber;
 public class App extends Application {
 
     /*
-    // TODO: Permissions
     // TODO: Automatic network discovery
 
     // TODO: Show message when nothing sent / found

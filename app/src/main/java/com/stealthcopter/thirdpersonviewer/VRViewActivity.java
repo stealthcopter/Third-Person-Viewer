@@ -1,6 +1,8 @@
 package com.stealthcopter.thirdpersonviewer;
 
 import android.app.ActionBar;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,12 +19,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class VRViewActivity extends AppCompatActivity {
+    private static final String EXTRA_IP = "ip";
+
     @BindView(R.id.camera_preview) ImageView mCameraView;
     @BindView(R.id.camera_preview2) ImageView mCameraView2;
 
-    public static String SERVERIP = "192.168.43.203";
     public VideoClientThread mClient;
     public static Bitmap mLastFrame;
+    private String ip;
 
     private final Handler handler = new Handler();
 
@@ -48,11 +52,20 @@ public class VRViewActivity extends AppCompatActivity {
         }
     };
 
+    public static Intent createLink(Context context, String ip){
+        Intent intent = new Intent(context, VRViewActivity.class);
+        intent.putExtra(EXTRA_IP, ip);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideDecorView();
         setContentView(R.layout.activity_vr);
         ButterKnife.bind(this);
+
+        ip = getIntent().getStringExtra(EXTRA_IP);
     }
 
     @Override
@@ -88,7 +101,7 @@ public class VRViewActivity extends AppCompatActivity {
                 // Background Code
                 Socket s = null;
                 try {
-                    s = new Socket(SERVERIP, Const.SERVER_PORT);
+                    s = new Socket(ip, Const.SERVER_PORT);
                     mClient = new VideoClientThread(s);
                     new Thread(mClient).start();
                 } catch (Exception e) {

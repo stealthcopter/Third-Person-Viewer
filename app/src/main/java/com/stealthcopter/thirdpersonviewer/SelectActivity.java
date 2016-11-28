@@ -1,12 +1,13 @@
 package com.stealthcopter.thirdpersonviewer;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
@@ -17,8 +18,7 @@ import timber.log.Timber;
 
 public class SelectActivity extends AppCompatActivity {
 
-    @BindView(R.id.startVR)
-    Button startVr;
+    private static final int PERMISSIONS_REQUEST_PERMISSIONS = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,24 +27,31 @@ public class SelectActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-
     @OnClick(R.id.startVR) void startVR(){
-        Timber.e("Start VR");
-        startActivity(new Intent(this, VRViewActivity.class));
+        startActivity(VRViewActivity.createLink(this, "192.168.43.203"));
     }
 
     @OnClick(R.id.startServer) void startServer(){
         Timber.e("Start server");
-        if (hasPermissions()) {
+        if (hasPermission()) {
             startActivity(new Intent(this, ServerActivity.class));
         }
         else{
-            // TODO: Get permission
+            requestPermission();
         }
     }
 
-    private boolean hasPermissions(){
-        return true;
+    private boolean hasPermission(){
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{
+                        Manifest.permission.CAMERA
+                },
+                PERMISSIONS_REQUEST_PERMISSIONS);
     }
 
 }
