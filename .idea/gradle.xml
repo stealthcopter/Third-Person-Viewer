@@ -9,7 +9,6 @@
           <set>
             <option value="$USER_HOME$/workspace/ThirdPersonViewer" />
             <option value="$USER_HOME$/workspace/ThirdPersonViewer/app" />
-            <option value="$USER_HOME$/workspace/ThirdPersonViewer/source" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

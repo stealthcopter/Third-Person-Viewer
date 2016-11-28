@@ -1,11 +1,9 @@
-package com.stealthcopter.thirdpersonviewer;
+package com.stealthcopter.thirdpersonviewer.video;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.os.Message;
-import android.os.SystemClock;
-import android.util.Log;
+
+import com.stealthcopter.thirdpersonviewer.VRViewActivity;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -46,6 +44,7 @@ public class VideoClientThread implements Runnable {
                 inStream = mSocket.getInputStream();
             } catch (Exception e) {
                 e.printStackTrace();
+                return;
             }
             DataInputStream is = new DataInputStream(inStream);
             while (mRunFlag) {
@@ -53,10 +52,9 @@ public class VideoClientThread implements Runnable {
                     int token = is.readInt();
                     if (token == 4) {
                         if (is.readUTF().equals("#@@#")) {
-                            //System.out.println("before-token" + token);
+
                             int imgLength = is.readInt();
-//                            System.out.println("getLength:" + imgLength);
-//                            System.out.println("back-token" + is.readUTF());
+
                             is.readUTF();
 
                             byte[] buffer = new byte[imgLength];
@@ -74,7 +72,7 @@ public class VideoClientThread implements Runnable {
                             logFrameRate();
 
                             if (bitmap != null){
-                                MainActivity.mLastFrame = bitmap;
+                                VRViewActivity.mLastFrame = bitmap;
                             }
                         }
                     }else{

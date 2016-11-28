@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.alvin.camerasource.MainActivity">
+    tools:context=".ServerActivity">
 
     <FrameLayout
         android:id="@+id/camera_preview"
@@ -19,4 +19,13 @@
         android:layout_gravity="bottom|center"
         android:padding="8dp"
         android:id="@+id/textView" />
+
+    <ImageButton
+        android:id="@+id/stopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_svg_close"
+        android:layout_margin="16dp"
+        android:layout_gravity="right|top"/>
+
 </FrameLayout>

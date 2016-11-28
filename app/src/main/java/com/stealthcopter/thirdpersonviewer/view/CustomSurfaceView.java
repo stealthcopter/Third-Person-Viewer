@@ -1,4 +1,4 @@
-package com.stealthcopter.thirdpersonviewer;
+package com.stealthcopter.thirdpersonviewer.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,6 +6,8 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.stealthcopter.thirdpersonviewer.VRViewActivity;
 
 import timber.log.Timber;
 
@@ -56,14 +58,14 @@ public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     private void doDraw(Canvas canvas) {
 
-        if (MainActivity.mLastFrame != null) {
+        if (VRViewActivity.mLastFrame != null) {
 
-            source.set(0, 0, MainActivity.mLastFrame.getWidth(), MainActivity.mLastFrame.getHeight());
+            source.set(0, 0, VRViewActivity.mLastFrame.getWidth(), VRViewActivity.mLastFrame.getHeight());
             dst1.set(0, 0, width / 2, height);
             dst2.set(width / 2, 0, width, height);
 
-            canvas.drawBitmap(MainActivity.mLastFrame, source, dst1, null);
-            canvas.drawBitmap(MainActivity.mLastFrame, source, dst2, null);
+            canvas.drawBitmap(VRViewActivity.mLastFrame, source, dst1, null);
+            canvas.drawBitmap(VRViewActivity.mLastFrame, source, dst2, null);
         }
         else{
             Timber.e("Frames is null");
@@ -145,9 +147,9 @@ public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
                 synchronized (surfaceHolder) {
 
-                    if (MainActivity.frameNumber != lastFrameNo) {
+                    if (VRViewActivity.frameNumber != lastFrameNo) {
 
-                        lastFrameNo = MainActivity.frameNumber;
+                        lastFrameNo = VRViewActivity.frameNumber;
 
                         canvas = surfaceHolder.lockCanvas();
 

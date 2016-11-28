@@ -12,13 +12,24 @@
         android:supportsRtl="true"
         android:name=".App"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-                  android:screenOrientation="landscape">
+        <activity android:name=".SelectActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".VRViewActivity"
+            android:screenOrientation="landscape">
+        </activity>
+
+        <activity android:name=".ServerActivity"
+            android:screenOrientation="landscape">
+        </activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="68ad5abe8841cd6b7784b42bbbf5185df1a502cb" />
     </application>
 
 </manifest>

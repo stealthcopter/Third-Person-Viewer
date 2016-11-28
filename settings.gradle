@@ -1,1 +1,1 @@
-include ':app', ':source'
+include ':app'

@@ -1,4 +1,4 @@
-package com.stealthcopter.thirdpersonviewer.source;
+package com.stealthcopter.thirdpersonviewer;
 
 import android.app.ActionBar;
 import android.hardware.Camera;
@@ -11,53 +11,39 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.stealthcopter.thirdpersonviewer.network.Networking;
+import com.stealthcopter.thirdpersonviewer.video.VideoServerThread;
+import com.stealthcopter.thirdpersonviewer.view.CameraPreviewView;
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import com.stealthcopter.thirdpersonviewer.source.R;
+import butterknife.BindView;
+import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class ServerActivity extends AppCompatActivity {
     private Camera mCamera;
     public CameraPreviewView mPreview;
-    public TextView serverStatus;
     public static String SERVERIP = "localhost";
-    public static final int SERVERPORT = 9191;
     private Handler handler = new Handler();
     private VideoServerThread videoServerThread;
+
+    @BindView(R.id.textView) public TextView serverStatus;
+    @BindView(R.id.camera_preview) public FrameLayout camera_preview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        setContentView(R.layout.activity_main);
-        serverStatus = (TextView) findViewById(R.id.textView);
+        setContentView(R.layout.activity_server);
     }
 
-    /**
-     * Get local ip address of the phone
-     *
-     * @return ipAddress
-     */
-    private String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
-                        return inetAddress.getHostAddress().toString();
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e("ServerActivity", ex.toString());
-        }
-        return null;
+    @OnClick(R.id.stopButton) private void onStopButtonClicked() {
+        stopSocket();
+        finish();
     }
 
     /**
@@ -102,18 +88,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-//        handler.removeCallbacks(updateImageRunnable);
         stopSocket();
     }
 
     private void startSocket(){
-        SERVERIP = getLocalIpAddress();
+        SERVERIP = Networking.getLocalIpAddress();
         mCamera = getCameraInstance();
         mPreview = new CameraPreviewView(this, mCamera);
-        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-        preview.addView(mPreview);
+        camera_preview.addView(mPreview);
 
-        videoServerThread = new VideoServerThread(this, SERVERIP, SERVERPORT, handler);
+        videoServerThread = new VideoServerThread(this, SERVERIP, Const.SERVER_PORT, handler);
 
         Thread cThread = new Thread(videoServerThread);
         cThread.start();

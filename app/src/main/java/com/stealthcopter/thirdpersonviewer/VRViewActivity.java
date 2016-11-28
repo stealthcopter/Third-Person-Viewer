@@ -9,15 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.stealthcopter.thirdpersonviewer.video.VideoClientThread;
+
 import java.net.Socket;
 
-public class MainActivity extends AppCompatActivity {
-    public static int frameNumber = -1;
-    private ImageView mCameraView;
-    private ImageView mCameraView2;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class VRViewActivity extends AppCompatActivity {
+    @BindView(R.id.camera_preview) ImageView mCameraView;
+    @BindView(R.id.camera_preview2) ImageView mCameraView2;
 
     public static String SERVERIP = "192.168.43.203";
-    public static final int SERVERPORT = 9191;
     public VideoClientThread mClient;
     public static Bitmap mLastFrame;
 
@@ -48,22 +51,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_main);
-
-        mCameraView = (ImageView) findViewById(R.id.camera_preview);
-        mCameraView2 = (ImageView) findViewById(R.id.camera_preview2);
-
+        setContentView(R.layout.activity_vr);
+        ButterKnife.bind(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        hideDecorView();
-
         handler.post(updateImageRunnable);
-
         startSocket();
     }
 
@@ -93,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 // Background Code
                 Socket s = null;
                 try {
-                    s = new Socket(SERVERIP, SERVERPORT);
+                    s = new Socket(SERVERIP, Const.SERVER_PORT);
                     mClient = new VideoClientThread(s);
                     new Thread(mClient).start();
                 } catch (Exception e) {

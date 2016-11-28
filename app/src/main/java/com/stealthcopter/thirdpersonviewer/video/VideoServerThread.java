@@ -1,8 +1,9 @@
-package com.stealthcopter.thirdpersonviewer.source;
+package com.stealthcopter.thirdpersonviewer.video;
 
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
+
+import com.stealthcopter.thirdpersonviewer.ServerActivity;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,24 +11,24 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import timber.log.Timber;
+
 /**
  * Created by Alvin on 2016-05-20.
  */
 public class VideoServerThread implements Runnable {
     private int mServerPort;
     private String mServerIP;
-    private Context mContext;
     private Handler mHandler;
-    private MainActivity mActivityInstance;
+    private ServerActivity mActivityInstance;
     private boolean keepRunning;
 
     public VideoServerThread(Context context, String serverip, int serverport, Handler handler) {
         super();
-        mContext = context;
         mServerIP = serverip;
         mServerPort = serverport;
         mHandler = handler;
-        mActivityInstance = (MainActivity) mContext;
+        mActivityInstance = (ServerActivity) context;
     }
 
     public void stop(){
@@ -49,14 +50,13 @@ public class VideoServerThread implements Runnable {
                 new Thread(new ServerSocketThread(s)).start();
             }
         } catch (Exception e) {
-            Log.d("ServerThread", "run: erro");
+            Timber.e(e, "run: erro");
         }
     }
 
     public class ServerSocketThread implements Runnable {
         Socket s = null;
-        // BufferedReader br = null;
-        //BufferedWriter bw = null;
+
         OutputStream os = null;
 
         long startTime = -1;
@@ -92,9 +92,9 @@ public class VideoServerThread implements Runnable {
                         dos.writeInt(mActivityInstance.mPreview.mFrameBuffer.size());
                         dos.writeUTF("-@@-");
                         dos.flush();
-                        // System.out.println(mActivityInstance.mPreview.mFrameBuffer.size());
+
                         dos.write(mActivityInstance.mPreview.mFrameBuffer.toByteArray());
-                        //System.out.println("outlength"+mPreview.mFrameBuffer.length);
+
                         dos.flush();
 
                         timeTaken = System.currentTimeMillis() - startTime;

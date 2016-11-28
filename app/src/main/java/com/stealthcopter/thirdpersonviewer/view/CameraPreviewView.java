@@ -1,4 +1,4 @@
-package com.stealthcopter.thirdpersonviewer.source;
+package com.stealthcopter.thirdpersonviewer.view;
 
 import android.content.Context;
 import android.graphics.ImageFormat;
