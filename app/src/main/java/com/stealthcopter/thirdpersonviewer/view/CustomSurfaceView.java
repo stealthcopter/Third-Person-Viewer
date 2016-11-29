@@ -147,9 +147,9 @@ public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
                 synchronized (surfaceHolder) {
 
-                    if (VRViewActivity.frameNumber != lastFrameNo) {
-
-                        lastFrameNo = VRViewActivity.frameNumber;
+//                    if (VRViewActivity.frameNumber != lastFrameNo) {
+//
+//                        lastFrameNo = VRViewActivity.frameNumber;
 
                         canvas = surfaceHolder.lockCanvas();
 
@@ -159,7 +159,7 @@ public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Call
                             surfaceHolder.unlockCanvasAndPost(canvas);
                         }
                     }
-                }
+//                }
 
             }
 
