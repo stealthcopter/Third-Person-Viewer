@@ -41,7 +41,7 @@ public class ServerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_server);
     }
 
-    @OnClick(R.id.stopButton) private void onStopButtonClicked() {
+    @OnClick(R.id.stopButton) void onStopButtonClicked() {
         stopSocket();
         finish();
     }
