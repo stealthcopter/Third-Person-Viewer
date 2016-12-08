@@ -22,6 +22,7 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ServerActivity extends AppCompatActivity {
@@ -39,6 +40,8 @@ public class ServerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_server);
+
+        ButterKnife.bind(this);
     }
 
     @OnClick(R.id.stopButton) void onStopButtonClicked() {
