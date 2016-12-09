@@ -43,10 +43,9 @@ public class VRViewActivity extends AppCompatActivity {
                         }
 
                     }
-                }); //this function can change value of mInterval.
+                });
             } finally {
-                // 100% guarantee that this always happens, even if
-                // your update method throws an exception
+                // Update frame rate at 30fps
                 handler.postDelayed(updateImageRunnable, 1000 / 30);
             }
         }

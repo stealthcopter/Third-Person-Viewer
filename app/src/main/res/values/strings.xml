@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Third Person App</string>
+    <string name="enter_ip">Enter Ip Address</string>
+    <string name="ip_address">ip address</string>
 </resources>

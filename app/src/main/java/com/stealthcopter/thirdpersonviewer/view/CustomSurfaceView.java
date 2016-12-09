@@ -13,6 +13,9 @@ import timber.log.Timber;
 
 /**
  * Created by mat on 25/11/16.
+ *
+ * This currently isn't used, but is a handy custom surface view for fast updates.
+ *
  */
 
 public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
@@ -91,8 +94,6 @@ public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Call
     private GameThread thread = null;
 
     public void startGame() {
-        Timber.e("startGame...");
-
         if (thread == null) {
             thread = new GameThread(this);
             thread.startThread();
@@ -101,7 +102,6 @@ public class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
 
     public void stopGame() {
-        Timber.e("stopGame...");
         if (thread != null) {
             thread.stopThread();
 
